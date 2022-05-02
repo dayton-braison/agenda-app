@@ -1,0 +1,43 @@
+{% extends 'base/main.html' %}
+
+{% block content %}
+
+<div class="header-bar">
+    <div>
+        <h1 class="agenda-header">Hello {{ request.user|title }}!</h1>
+    </div>
+
+    {% if request.user.is_authenticated %}
+    <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+</div>
+
+<h1 class="agenda-header">My Agenda List 🗒️</h1>
+<a  id="add-link" href="{% url 'agenda-create' %}">+</a>
+
+<div class="agenda-tasks-wrapper">
+    {% for agenda in agenda_list %}
+    <div class="agenda-wrapper">
+            {% if agenda.complete %}
+                <div class="agenda-title">
+                    <div class="agenda-complete-icon"></div>
+                    <i><s><a href="{% url 'agenda-update' agenda.id %}">{{ agenda }} <br> 
+                        <small>{{ agenda.description }}</small></a></s></i>
+                </div>
+                <a class="delete-link" href="{% url 'agenda-delete' agenda.id %}">&#215;</a>
+                {% else %}
+                <div class="agenda-title">
+                    <div class="agenda-incomplete-icon"></div>
+                    <a href="{% url 'agenda-update' agenda.id %}">{{ agenda }} <br> 
+                        <small>{{ agenda.description }}</small></a>
+                </div>
+                <a class="delete-link" href="{% url 'agenda-delete' agenda.id %}">&#215;</a>
+            {% endif %}
+        </div>
+    {% empty %}
+    <h2>No tasks on the agenda</h2>
+    {% endfor %}
+</div>
+{% endblock content %}
